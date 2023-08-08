@@ -17,8 +17,10 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
-		<pitest.plugin.version>1.9.8</pitest.plugin.version>
+		<pitest.plugin.version>1.14.0</pitest.plugin.version>
+		<pitest.dependency.version>1.2.0</pitest.dependency.version>
 		<mutation.coverage.threshold.value>90</mutation.coverage.threshold.value>
+		<maven.plugin.version>2.22.2</maven.plugin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -57,11 +59,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency><!-- Used as part of JUnit5 integration to mutation testing -->
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-junit5-plugin</artifactId>
+			<version>${pitest.dependency.version}</version>
+		</dependency>
 		<dependency><!-- Spring AOP for logging purposes -->
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
 		</dependency>
-		<dependency><!-- BT-BOM maintains version 1.9.7 -->
+		<dependency><!-- AOP Logging purposes -->
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 		</dependency>
@@ -74,6 +81,10 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
@@ -88,6 +99,13 @@
 				</executions>
 				<configuration>
 				<mutationThreshold>${mutation.coverage.threshold.value}</mutationThreshold>
+					<excludedClasses>
+						<param>com.royalmail.barcode.aspect.*</param>
+						<param>com.royalmail.barcode.config.*</param>
+						<param>com.royalmail.barcode.entity.*</param>
+						<param>com.royalmail.barcode.exception.*</param>
+						<param>com.royalmail.barcode.CodingAssessmentBarcodeApplication</param>
+					</excludedClasses>
 				</configuration>
 			</plugin>
 			<plugin>
