@@ -14,3 +14,13 @@ valid barcode example: AA473124829GB
 invalid barcode example: AA473124828GB – incorrect check digit
 Use your own discretion to decide how best to build and test the service. Document how to run the service locally and optionally any assumptions you made.
 
+Considerations:
+- Logging:
+  - Use of interceptors adds overhead, but would be useful when logging all request/responses. Particularly when paired with tracking Header. 
+- Means of handling validation errors
+  - Could have taken a few approaches. Chose not to use Spring/Javax Annotation driven validation, as these would throw exceptions whic would need to be caught in a ResponseExceptionHandlerAdvice and mapped to a 'false'
+  - Could have separated out the 
+  - As there is only one endpoint, currently a custom E
+
+Distributed/performance:
+- Could have split the methods out in to Async ones, if any of the methods fail, the whole thread returns false. Make the barcode immutable object and this therefore is thread safe for a distributed system
