@@ -18,19 +18,22 @@ public class BarcodeValidator {
         barcode = barcode.trim().toUpperCase();
 
         // Extract country Code
-        try {
-            CountryCode countryCode = CountryCode.valueOf(barcode.substring(barcode.length() - 2));
-            if(!config.getValidCountryCodes().contains(countryCode)){
-                return false;
-            }
-        } catch(Exception e){
-            log.info("incorrect Country code provided {}", barcode.substring(barcode.length() - 2));
+        CountryCode countryCode = CountryCode.valueOf(barcode.substring(barcode.length() - 2));
+        if(!config.getValidCountryCodes().contains(countryCode)){
+            return false;
         }
+
         if(null == barcode || barcode.length() != config.getValidBarcodeLength()){
+            log.info("Invalid Barcode : {} of length {}, must be of length {}", barcode, barcode.length(), config.getValidBarcodeLength());
             return false;
         }
 
         // Validate Prefix is only uppercase letters
+        if(!barcode.substring(0, 1).matches(config.getPrefixValueRange())){
+            // TODO: This is not working
+            log.error("ERROR");
+            return false;
+        }
 
         // Validate the 8 digit serial number but including the padding..
 

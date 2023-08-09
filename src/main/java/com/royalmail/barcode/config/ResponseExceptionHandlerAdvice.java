@@ -15,10 +15,11 @@ public class ResponseExceptionHandlerAdvice extends ResponseEntityExceptionHandl
             InvalidCheckDigitException.class,
             InvalidSerialNumberException.class,
             InvalidCountryCodeException.class})
-    public ResponseEntity<String> handleCustomException(RuntimeException e) {
+    public ResponseEntity<Boolean> handleCustomException(RuntimeException e) {
         log.error("Validation error: {}", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return new ResponseEntity<>(false, HttpStatus.OK);
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {

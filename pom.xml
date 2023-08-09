@@ -64,9 +64,9 @@
 			<artifactId>pitest-junit5-plugin</artifactId>
 			<version>${pitest.dependency.version}</version>
 		</dependency>
-		<dependency><!-- Spring AOP for logging purposes -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		<dependency><!-- AOP Logging purposes -->
 			<groupId>org.aspectj</groupId>
@@ -76,7 +76,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 		</dependency>
-
 	</dependencies>
 
 	<build>

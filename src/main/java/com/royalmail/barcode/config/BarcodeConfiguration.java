@@ -15,6 +15,6 @@ public class BarcodeConfiguration {
     private String serialNumberRange;
     private List<CountryCode> validCountryCodes;
     private int validBarcodeLength;
-
     private String serialCodePattern;
+    private List<Integer> s10Weightings;
 }
