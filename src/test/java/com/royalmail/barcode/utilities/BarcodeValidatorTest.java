@@ -2,8 +2,11 @@ package com.royalmail.barcode.utilities;
 
 import com.royalmail.barcode.exception.InvalidCountryCodeException;
 import com.royalmail.barcode.exception.InvalidPrefixException;
+import com.royalmail.barcode.exception.InvalidSerialNumberException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,6 +16,8 @@ public class BarcodeValidatorTest {
 
     @Autowired
     BarcodeValidator barcodeValidator;
+    @Mock
+    CheckDigitAlgorithm checkDigitAlgorithm;
 
     // Values used in tests
     // Valid
@@ -32,6 +37,7 @@ public class BarcodeValidatorTest {
      */
     @Test
     public void testValidBarcode() {
+        Mockito.when(checkDigitAlgorithm.isValidCheckDigit(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         Assertions.assertTrue(barcodeValidator.validateBarcode(validInput));
     }
 
@@ -41,6 +47,7 @@ public class BarcodeValidatorTest {
      */
     @Test
     public void testValidBarcode_zeroPadding() {
+        Mockito.when(checkDigitAlgorithm.isValidCheckDigit(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         Assertions.assertTrue(barcodeValidator.validateBarcode(validInput_withZeroPadding));
     }
 
@@ -50,7 +57,9 @@ public class BarcodeValidatorTest {
      */
     @Test
     public void testInvalidBarcode_Length() {
-        Assertions.assertFalse(barcodeValidator.validateBarcode(invalidInput_invalidLength));
+        Assertions.assertThrows(InvalidSerialNumberException.class,
+                () -> barcodeValidator.validateBarcode(invalidInput_invalidLength)
+        );
     }
 
     /**
@@ -66,11 +75,13 @@ public class BarcodeValidatorTest {
 
     /**
      * Testing scenario where invalid barcode is provided - non-digit character provided
-     * Expected: false
+     * Expected: {@link InvalidSerialNumberException}
      */
     @Test
     public void testInvalidBarcode_SerialNumberContainsSymbols() {
-        Assertions.assertFalse(barcodeValidator.validateBarcode(invalidInput_codeContainsSymbols));
+        Assertions.assertThrows(InvalidSerialNumberException.class, () ->
+                barcodeValidator.validateBarcode(invalidInput_codeContainsSymbols)
+        );
     }
 
     /**
@@ -79,7 +90,9 @@ public class BarcodeValidatorTest {
      */
     @Test
     public void testInvalidBarcode_SerialNumberContainsLetters() {
-        Assertions.assertFalse(barcodeValidator.validateBarcode(invalidInput_codeContainsLetters));
+        Assertions.assertThrows(InvalidSerialNumberException.class,
+                () ->barcodeValidator.validateBarcode(invalidInput_codeContainsLetters)
+        );
     }
 
     /**
@@ -88,6 +101,7 @@ public class BarcodeValidatorTest {
      */
     @Test
     public void testInvalidBarcode_CheckDigit() {
+        Mockito.when(checkDigitAlgorithm.isValidCheckDigit(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
         Assertions.assertFalse(barcodeValidator.validateBarcode(invalidInput_invalidCheckDigit));
     }
 
