@@ -2,9 +2,13 @@ package com.royalmail.barcode.utilities;
 
 import com.royalmail.barcode.config.BarcodeConfiguration;
 import com.royalmail.barcode.entity.CountryCode;
+import com.royalmail.barcode.exception.InvalidPrefixException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -17,51 +21,49 @@ public class BarcodeValidator {
         // Process input: trim whitespace, make uppercase
         barcode = barcode.trim().toUpperCase();
 
-        // Extract country Code
-        CountryCode countryCode = CountryCode.valueOf(barcode.substring(barcode.length() - 2));
+        // Validate Prefix is only uppercase letters
+        Pattern prefixPatter = Pattern.compile(config.getPrefixValueRange());
+        if(!prefixPatter.matcher(barcode.substring(0, 2)).matches()){
+            log.error("invalid prefix");
+            throw new InvalidPrefixException("Invalid prefix provided");
+        }
+
+        // Extract country Code: Throws InvalidCountryCodeException
+        CountryCode countryCode = mapCountryCode(barcode);
         if(!config.getValidCountryCodes().contains(countryCode)){
             return false;
         }
+
+        // Check barcode Length TODO: Must check for left-padding.
+        // Strip out first two digits (Prefix), strip out last two Inputs (Country Code)
+        // Separate two, the last of the remaining is the check-digit, the previous is the 8 digit serial code (Left padded zeros)
+        String serialNumber = barcode.substring(2, barcode.length() - 3);
+        int checkDigit = barcode.charAt(barcode.length() - 3);
 
         if(null == barcode || barcode.length() != config.getValidBarcodeLength()){
             log.info("Invalid Barcode : {} of length {}, must be of length {}", barcode, barcode.length(), config.getValidBarcodeLength());
             return false;
         }
 
-        // Validate Prefix is only uppercase letters
-        if(!barcode.substring(0, 1).matches(config.getPrefixValueRange())){
-            // TODO: This is not working
-            log.error("ERROR");
-            return false;
-        }
-
         // Validate the 8 digit serial number but including the padding..
 
         // CheckDigit validation
-
+        S10CheckDigitAlgorithmImpl s10Impl = new S10CheckDigitAlgorithmImpl();
+//        s10Impl.isValidCheckDigit();
         // Check the value of the country code. Currently only accepting GB
         return true;
     }
 
-    private boolean isValidCheckDigit(){
-        int checkDigit = 0;
-        int expectedDigit = 0;
-
-        return (checkDigit == expectedDigit);
-        // Ignore the first two chars
-
-        // Ignore last two chars
-
-        // Assign the weights 8, 6, 4, 2, 3, 5, 9, 7 to the 8 digits, from left to right
-
-        // Calculate the sum, of each digit multiplied by its weight.
-
-        // Calculate the check digit from:
-        // Check digit = 11 - (sum mod 11)
-
-        // If check difit = 10, change to 0
-        // If check digit = 11, change to 5
+    /**
+     * Helper method to map the Countrycode from the input Barcode, returning the {@link CountryCode}
+     * @param barcode
+     * @return the {@link CountryCode} parsed from the input String
+     * @throws IllegalArgumentException if invalid mapping to enum occurrs.
+     */
+    public CountryCode mapCountryCode(String barcode){
+        return CountryCode.valueOf(barcode.substring(barcode.length() - 2));
     }
+
 
     private boolean isValidPrefix(){
 
