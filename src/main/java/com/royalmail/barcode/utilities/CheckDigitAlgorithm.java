@@ -2,5 +2,5 @@ package com.royalmail.barcode.utilities;
 
 public interface CheckDigitAlgorithm {
 
-    boolean isValidCheckDigit();
+    boolean isValidCheckDigit(Integer inputSerialCode, int inputCheckDigit);
 }

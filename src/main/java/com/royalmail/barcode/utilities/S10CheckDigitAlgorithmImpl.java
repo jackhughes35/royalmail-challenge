@@ -1,8 +1,14 @@
 package com.royalmail.barcode.utilities;
 
+import com.royalmail.barcode.config.BarcodeConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class S10CheckDigitAlgorithmImpl implements CheckDigitAlgorithm {
+    @Autowired
+    BarcodeConfiguration config;
+
     @Override
-    public boolean isValidCheckDigit() {
+    public boolean isValidCheckDigit(Integer inputSerialCode, int inputCheckDigit) {
         int checkDigit = 0;
         int expectedDigit = 0;
 
