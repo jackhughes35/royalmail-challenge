@@ -18,8 +18,6 @@ public class BarcodeValidationController {
     public ResponseEntity<Boolean> validateBarcode(@PathVariable(required = true) String barcode) {
 
         boolean isValid = validator.validateBarcode(barcode);
-
-        ResponseEntity<Boolean> responseEntity = new ResponseEntity<>(isValid, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(isValid, HttpStatus.OK);
     }
 }
