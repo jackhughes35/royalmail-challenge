@@ -12,10 +12,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* com.royalmail.barcode.controller.BarcodeValidationController.*(..))")
-    public void controllerPointcut(){
-    }
-
+//    @Pointcut("execution(* com.royalmail.barcode.controller.BarcodeValidationController.*(..))")
+//    public void controllerPointcut(){
+//    }
+//
+//    // TODO: FIX
 //    @AfterReturning(pointcut = "controllerPointcut()", returning = "result")
 //    public void logAfterReturning(JoinPoint joinPoint, Object result) {
 //        String methodName = joinPoint.getSignature().getName();

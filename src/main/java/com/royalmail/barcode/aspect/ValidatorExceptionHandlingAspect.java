@@ -18,7 +18,7 @@ public class ValidatorExceptionHandlingAspect {
 
     @Around("execution(* com.royalmail.barcode.utilities.BarcodeValidator.validateBarcode(..))  && args(barcode,..)")
     public Object handelLogging(ProceedingJoinPoint joinPoint, String barcode) throws Throwable {
-
+        // TODO: Should thius be thrown from the specific method?
         try {
             return joinPoint.proceed();
         }
