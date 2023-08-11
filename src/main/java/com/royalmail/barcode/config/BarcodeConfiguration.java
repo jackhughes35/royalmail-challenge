@@ -13,7 +13,7 @@ import java.util.List;
 public class BarcodeConfiguration {
     private String prefixValueRange;
     private String serialNumberRange;
-    private List<CountryCode> validCountryCodes;
+    private List<CountryCode> validCountryCodes; // Do I need to add more logic to handle exceptions when mapping?
     private int validBarcodeLength;
     private String serialCodePattern;
     private List<Integer> s10Weightings;
