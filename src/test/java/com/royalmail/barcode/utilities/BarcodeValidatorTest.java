@@ -1,22 +1,30 @@
 package com.royalmail.barcode.utilities;
 
+import com.royalmail.barcode.config.BarcodeConfiguration;
 import com.royalmail.barcode.exception.InvalidCountryCodeException;
 import com.royalmail.barcode.exception.InvalidPrefixException;
 import com.royalmail.barcode.exception.InvalidSerialNumberException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.mockito.Mockito.mock;
 
 
 @SpringBootTest
+//@ExtendWith(MockitoExtension.class)
 public class BarcodeValidatorTest {
 
     @Autowired
     BarcodeValidator barcodeValidator;
-    @Mock
+    @MockBean
     CheckDigitAlgorithm checkDigitAlgorithm;
 
     // Values used in tests
@@ -91,7 +99,7 @@ public class BarcodeValidatorTest {
     @Test
     public void testInvalidBarcode_SerialNumberContainsLetters() {
         Assertions.assertThrows(InvalidSerialNumberException.class,
-                () ->barcodeValidator.validateBarcode(invalidInput_codeContainsLetters)
+                () -> barcodeValidator.validateBarcode(invalidInput_codeContainsLetters)
         );
     }
 
@@ -115,4 +123,5 @@ public class BarcodeValidatorTest {
                 () -> barcodeValidator.validateBarcode(invalidInput_countryCodeInvalid)
         );
     }
+
 }

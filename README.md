@@ -1,7 +1,8 @@
 # royalmail-challenge
 Challenge for RoyalMail Interview Process
 
-TODO: Decouple so the means of validating is easily changed from S10 to another validation method. 
+TODO: Decouple so the means of validating is easily changed from S10 to another validation method.
+TODO: Build carries out unit test, pit test, int test. 
 ## Your Task
 Build an API that will validate an S10 barcode. The expected deliverable should be Java-based with one endpoint (/validate). (Done)
 The endpoint must take as input a single 1D barcode value (e.g. AA473124829GB) and return a boolean response. (Done)
