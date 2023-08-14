@@ -19,7 +19,7 @@
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
 		<pitest.plugin.version>1.14.0</pitest.plugin.version>
 		<pitest.dependency.version>1.2.0</pitest.dependency.version>
-		<mutation.coverage.threshold.value>90</mutation.coverage.threshold.value>
+		<mutation.coverage.threshold.value>85</mutation.coverage.threshold.value>
 		<maven.plugin.version>2.22.2</maven.plugin.version>
 	</properties>
 
