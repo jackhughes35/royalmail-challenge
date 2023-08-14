@@ -1,7 +1,6 @@
 package com.royalmail.barcode.utilities;
 
 import com.royalmail.barcode.config.BarcodeConfiguration;
-import com.royalmail.barcode.exception.InvalidSerialNumberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

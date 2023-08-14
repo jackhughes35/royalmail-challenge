@@ -8,10 +8,7 @@ import com.royalmail.barcode.exception.InvalidSerialNumberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
@@ -29,10 +26,14 @@ public class BarcodeValidator {
         barcode = barcode.trim().toUpperCase();
 
         // Validate Prefix is only uppercase letters
-        isValidPrefix(barcode);
+        if(!isValidPrefix(barcode)){
+            return false;
+        }
 
         // Extract country Code: Throws InvalidCountryCodeException
-        isValidCountryCode(barcode);
+        if(!isValidCountryCode(barcode)){
+            return false;
+        }
 
         // Separate two, the last of the remaining is the check-digit, the previous is the 8 digit serial code (Left padded zeros)
         // TODO: Decouple further taking passing only the barcode in
