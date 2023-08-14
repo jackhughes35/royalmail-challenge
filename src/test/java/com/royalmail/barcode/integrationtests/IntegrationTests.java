@@ -1,28 +1,16 @@
 package com.royalmail.barcode.integrationtests;
 
-import com.royalmail.barcode.config.BarcodeConfiguration;
-import com.royalmail.barcode.controller.BarcodeValidationController;
-import com.royalmail.barcode.utilities.BarcodeValidator;
-import com.royalmail.barcode.utilities.S10CheckDigitAlgorithmImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -33,9 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.stream.Stream;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {BarcodeConfiguration.class })
-@WebAppConfiguration
+@SpringBootTest
+@AutoConfigureMockMvc
 @TestPropertySource("classpath:application.properties")
 public class IntegrationTests {
 
@@ -44,34 +31,32 @@ public class IntegrationTests {
 
     private MockMvc mockMvc;
 
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
     private final String correctUri = "/validate";
     private String trackingHeader = "trackingHeader";
 
-    @BeforeEach
-    public void setup() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-    }
+
     @ParameterizedTest
     @MethodSource("provideStringsForTest")
     public void test(String pathParam, boolean expectedResponse) throws Exception {
         StringBuilder sb = new StringBuilder(correctUri).append("/").append(pathParam);
-
-        // Carry out request
-        MvcResult result = mockMvc.perform(buildRequest(buildUri(sb.toString()), trackingHeader))
-                .andReturn();
-
-        // Assertions taken from input stream
-        Assertions.assertEquals(expectedResponse, Boolean.valueOf(result.getResponse().getContentAsString()));
-        Assertions.assertEquals(HttpStatus.OK, result.getResponse().getStatus());
-    }
-
-    private RequestBuilder buildRequest(String uri, String trackingHeader){
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(uri)
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(buildUri(sb.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .header("E2E-Tracking-Header", trackingHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8");
-        return requestBuilder;
+
+        // Carry out request
+        MvcResult result = mockMvc.perform(requestBuilder)
+                .andReturn();
+
+        // Assertions taken from input stream
+        Assertions.assertEquals(expectedResponse, Boolean.valueOf(result.getResponse().getContentAsString()));
+        Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
     /**
