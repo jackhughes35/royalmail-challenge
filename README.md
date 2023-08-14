@@ -1,14 +1,13 @@
 # royalmail-challenge
 Challenge for RoyalMail Interview Process
 
-TODO: Build carries out unit test, pit test, int test. 
-TODO: Fix integration test
 # Considerations:
 - Logging:
   - Use of interceptors adds overhead, but would be useful when logging all request/responses. Particularly when paired with tracking Header. 
 - Means of handling validation errors
   - Could have taken a few approaches. Chose not to use Spring/Javax Annotation driven validation, as these might cause the solution to be closely coupled to a data model
-  
+- Could have improved with the use ofSpring cloud config to externalise configuration. 
+
 # Distributed/performance:
 - Could have split the methods out in to Async ones, if any of the methods fail, the whole thread returns false. Make the barcode immutable object and this therefore is thread safe for a distributed system
 
