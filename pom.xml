@@ -106,10 +106,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
 				<version>${pitest.plugin.version}</version>
@@ -131,6 +127,9 @@
 						<param>com.royalmail.barcode.CodingAssessmentBarcodeApplication</param>
 						<param>com.royalmail.barcode.utilities.CheckDigitAlgorithm</param>
 					</excludedClasses>
+					<excludedTestClasses>
+						<param>com.royalmail.barcode.integrationtests.IntegrationTests</param>
+					</excludedTestClasses>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -144,6 +143,34 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>com.royalmail.barcode.integrationtests.IntegrationTests.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven.plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+						<phase>install</phase>
+						<configuration>
+							<includes>
+								<include>com.royalmail.barcode.integrationtests.IntegrationTests.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
